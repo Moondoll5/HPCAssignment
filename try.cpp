@@ -12,22 +12,40 @@
 #include <time.h>
 #include <bits/stdc++.h>
 #include <omp.h>
+#include <stdlib.h>
 using namespace std;
 
+bool compare (int x, int y)
+{
+  if (x > y)
+  {
+  	return true;
+  }else{
+  	return false;
+  }
+}
+
 int main(int argc, char *argv[]){
-	std::stringstream test("this_is_a_test_string");
-	std::string segment;
-	std::vector<std::string> seglist;
+	vector<int> a = {1,5,3,2,4,10,2};
 
-	while(std::getline(test, segment, '_'))
+	cout << "SORT" << endl;
+
+	for (int i = 0; i < 7; ++i)
 	{
-	   seglist.push_back(segment);
+		cout << a[i] <<endl;
 	}
 
-	for (int i = 0; i < seglist.size(); ++i)
+	sort(a.begin(), a.end());
+	
+	cout << "after:" << endl;
+	for (int i = 0; i < 7; ++i)
 	{
-		cout << seglist[i] <<endl;
+		cout << a[i] <<endl;
 	}
+
+
+
 
 	return 0;
 }
+

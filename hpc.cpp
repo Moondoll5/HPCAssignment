@@ -13,7 +13,16 @@
 #include <time.h>
 #include <bits/stdc++.h>
 #include <omp.h>
+
+
 using namespace std;
+
+struct point{
+	float x;
+	float y;
+	float z;
+	bool set; //True is A and False is B
+};
 
 vector<string> splitByComma(string set){
 	//Separates text input into individual indices and stores into an array.
@@ -27,12 +36,6 @@ vector<string> splitByComma(string set){
 	{
 	   seglist.push_back(segment);
 	}
-
-	for (int i = 0; i < seglist.size(); ++i)
-	{
-		cout << seglist[i] <<endl;
-	}
-	
 	return seglist;
 }
 
@@ -40,7 +43,6 @@ vector<int> dashRemover(vector<string> set){
 	vector<int> indices;
 	for (int i = 0; i < set.size(); ++i)
 	{
-		cout << set[i] << endl;
 		if (set[i].find('-') != std::string::npos)
 		{
 			//Needs to get all indices indicated by dash
@@ -80,13 +82,15 @@ vector<int> dashRemover(vector<string> set){
 	return indices;
 }
 
+bool compareX(const point& a, const point& b)
+{
+	//Compares X values of points to sort vector.
+  return a.x < b.x;
+}
+
 
 
 int main(int argc, char *argv[]){
-	cout << argv[0] << endl;//File path
-	cout << argv[1] << endl;//-i
-	cout <<argv[2] << endl;//inputfile
-
 	//Name of the input file given as argument
 	string filename = argv[2];
 
@@ -103,6 +107,7 @@ int main(int argc, char *argv[]){
 		//Read file into array
 		while(getline(infile, line)) {
 	        input[count] = line;
+
 	        count++;
 	    }
 
@@ -113,18 +118,23 @@ int main(int argc, char *argv[]){
 		subsetA = input[2];
 		subsetB = input[3];
 
-		cout << dcdFilename << endl;
+		//Prints text file values
+		cout << dcdFilename<<endl;
 		cout << k << endl;
 		cout << subsetA << endl;
 		cout << subsetB << endl;
 		infile.close();
 		
+		//Removes comma between indices
 		vector<string> a, b;
 		vector<int>  setA, setB;
 		a = splitByComma(subsetA);
 		b = splitByComma(subsetB);
+
+		//Removes dashes and adds each index individually
 		setA = dashRemover(a);
 		setB = dashRemover(b);
+
 
 		int natoms;
 		dcdhandle *dcd; molfile_timestep_t timestep;
@@ -133,25 +143,36 @@ int main(int argc, char *argv[]){
 		cout << "natoms: " << natoms << endl;
 
 		timestep.coords = (float *)malloc(3*sizeof(float)*natoms);
+		vector<point> points;
 		for (int i=0; i<dcd->nsets; i++) {
             int rc = read_next_timestep(v, natoms, &timestep);
 
   			for(int j = 0; j < setA.size(); j++){
-  				float xA, xB, yA, yB, zA, zB;
+  				float xA, yA, zA;
   				int posA = setA[j];
-  				xA = *(timestep.coords+(3*val));
-  				yA  = *(timestep.coords+(3*val) + 1);
-  				zA = *(timestep.coords+(3*val)+2);
+  				xA = *(timestep.coords+(3*posA));
+  				yA  = *(timestep.coords+(3*posA) + 1);
+  				zA = *(timestep.coords+(3*posA)+2);
+  				point cd = {xA, yA, zA, true};
+  				points.push_back(cd);
+
   			}
 
   			for (int k = 0; k < setB.size(); k++){
+  				float xB, yB, zB;
   					int posB = setB[k];
-  					xB = *(timestep.coords+(3*valTwo));
-	  				yB  = *(timestep.coords+(3*valTwo) + 1);
-	  				zB = *(timestep.coords+(3*valTwo)+2);
-
+  					xB = *(timestep.coords+(3*posB));
+	  				yB  = *(timestep.coords+(3*posB) + 1);
+	  				zB = *(timestep.coords+(3*posB)+2);
+	  				point cd = {xB, yB, zB, false};
+	  				//points.push_back(cd);
   			}
 		}
+
+		//Sorts by x value
+		sort(points.begin(), points.end(), compareX);
+
+
 	} else {
 		std::cout << "Error: File cannot be opened";
 	}
