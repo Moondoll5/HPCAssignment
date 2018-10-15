@@ -27,7 +27,6 @@ struct point{
 vector<string> splitByComma(string set){
 	//Separates text input into individual indices and stores into an array.
 
-	// // if (segment.find(',') != std::string::npos){
 	std::stringstream points(set);
 	std::string segment;
 	std::vector<std::string> seglist;
@@ -171,6 +170,15 @@ int main(int argc, char *argv[]){
 
 		//Sorts by x value
 		sort(points.begin(), points.end(), compareX);
+
+		//Get middle point
+		int mid = points.size()/2;
+		cout << "mid: " << mid << endl;
+
+		float num = points[mid].x;
+		cout << "num: " << num << endl;
+
+		
 
 
 	} else {

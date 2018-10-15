@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 
 	cout << "SORT" << endl;
 
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < a.size(); ++i)
 	{
 		cout << a[i] <<endl;
 	}
@@ -38,13 +38,16 @@ int main(int argc, char *argv[]){
 	sort(a.begin(), a.end());
 	
 	cout << "after:" << endl;
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < a.size(); ++i)
 	{
 		cout << a[i] <<endl;
 	}
 
+	int mid = a.size()/2;
+	cout << "mid: " << mid << endl;
 
-
+	int num = a[mid];
+	cout << "num: " << num << endl;
 
 	return 0;
 }
