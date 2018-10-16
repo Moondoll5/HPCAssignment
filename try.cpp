@@ -13,42 +13,30 @@
 #include <bits/stdc++.h>
 #include <omp.h>
 #include <stdlib.h>
+#include <queue>
 using namespace std;
 
-bool compare (int x, int y)
-{
-  if (x > y)
-  {
-  	return true;
-  }else{
-  	return false;
-  }
-}
+// float bruteForce(Vector<int> points ){
+// 	for (int i = 0; i < points.size(); ++i)
+// 	{
+// 		cout<< points.x << " " << points.y << " " << points.z << endl;
+// 	}
+// }
 
 int main(int argc, char *argv[]){
-	vector<int> a = {1,5,3,2,4,10,2};
+	vector<int> points = {1,5,3,2,4,10,2};
+	//std::priority_queue<int> q ={};
+	float distance = pow(pow((points[0] - points[1]),2) + pow((points[3] - points[4]),2) + pow((points[5] - points[6]),2), 0.5);
+	cout << distance << endl;
 
-	cout << "SORT" << endl;
 
-	for (int i = 0; i < a.size(); ++i)
-	{
-		cout << a[i] <<endl;
-	}
 
-	sort(a.begin(), a.end());
+	// for (int i = 0; i < a.size(); ++i)
+	// {
+	// 	cout <<q.push(a[i]);
+	// }
+
 	
-	cout << "after:" << endl;
-	for (int i = 0; i < a.size(); ++i)
-	{
-		cout << a[i] <<endl;
-	}
-
-	int mid = a.size()/2;
-	cout << "mid: " << mid << endl;
-
-	int num = a[mid];
-	cout << "num: " << num << endl;
-
 	return 0;
 }
 

@@ -6,16 +6,20 @@
 #include <algorithm>
 #include <vector>
 #include <sstream>
+#include <queue>
 #include <string.h> 
 #include <cstdlib>
 #include "dcdplugin.c"
 #include <cmath>
+#include <math.h>
 #include <time.h>
 #include <bits/stdc++.h>
 #include <omp.h>
 
 
 using namespace std;
+
+priority_queue<float> distances;
 
 struct point{
 	float x;
@@ -87,6 +91,40 @@ bool compareX(const point& a, const point& b)
   return a.x < b.x;
 }
 
+float bruteForce(vector<point> points ){
+	float min = FLT_MAX;
+	vector<float> mins;
+	float distance;
+	int index = 0;
+	for (int i = 0; i < points.size(); i++)
+	{
+		//cout<< points[i].x << " " << points[i].y << " " << points[i].z << endl;
+		for (int j = 1; j < points.size(); j++)
+		{
+			if ((points[i].set && !points[j].set) || (!points[i].set && points[j].set))
+			{
+				distance = sqrt(std::pow(((points[i].x) - (points[j].x)),2) + std::pow(((points[i].y) - (points[j].y)),2) + std::pow(((points[i].z) - (points[j].z)),2));
+				if (distance < min)
+				{
+					min = distance;
+					mins.push_back(distance);
+					index = i;
+				}
+			}
+		}
+	}
+	sort(mins.begin(), mins.end());
+	cout<<"mins:"<<endl;
+	for (int i = 0; i < mins.size(); ++i)
+	{
+		cout << mins[i] << endl;
+	}
+	// cout << "min: " << min;
+	// cout << "index: " << index;
+
+	return 0;
+}
+
 
 
 int main(int argc, char *argv[]){
@@ -145,6 +183,7 @@ int main(int argc, char *argv[]){
 		vector<point> points;
 		for (int i=0; i<dcd->nsets; i++) {
             int rc = read_next_timestep(v, natoms, &timestep);
+            cout<< "Timestep: " << i << endl;
 
   			for(int j = 0; j < setA.size(); j++){
   				float xA, yA, zA;
@@ -152,6 +191,12 @@ int main(int argc, char *argv[]){
   				xA = *(timestep.coords+(3*posA));
   				yA  = *(timestep.coords+(3*posA) + 1);
   				zA = *(timestep.coords+(3*posA)+2);
+  				// if (posA == 313)
+  				// {
+  				// 	cout<<"X:"<<xA<<endl;
+  				// 	cout<<"Y:"<<yA<<endl;
+  				// 	cout<<"Z:"<<zA<<endl;
+  				// }
   				point cd = {xA, yA, zA, true};
   				points.push_back(cd);
 
@@ -163,21 +208,28 @@ int main(int argc, char *argv[]){
   					xB = *(timestep.coords+(3*posB));
 	  				yB  = *(timestep.coords+(3*posB) + 1);
 	  				zB = *(timestep.coords+(3*posB)+2);
+	  			// 	if (posB == 168052)
+  				// {
+  				// 	cout<<"X:"<<xB<<endl;
+  				// 	cout<<"Y:"<<yB<<endl;
+  				// 	cout<<"Z:"<<zB<<endl;
+  				// }
 	  				point cd = {xB, yB, zB, false};
-	  				//points.push_back(cd);
+	  				points.push_back(cd);
   			}
+
+	  		//Sorts by x value
+			sort(points.begin(), points.end(), compareX);
+
+			//Get middle point
+			int mid = points.size()/2;
+
+			float num = points[mid].x;
+
+			bruteForce(points);
 		}
 
-		//Sorts by x value
-		sort(points.begin(), points.end(), compareX);
-
-		//Get middle point
-		int mid = points.size()/2;
-		cout << "mid: " << mid << endl;
-
-		float num = points[mid].x;
-		cout << "num: " << num << endl;
-
+		
 		
 
 
